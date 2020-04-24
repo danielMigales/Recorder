@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Recorder</string>
+    <string name="video">Video</string>
+    <string name="audio">Audio</string>
+    <string name="parar">Parar</string>
+    <string name="reproducir">Reproducir</string>
+    <string name="grabar">Grabar</string>
+</resources>

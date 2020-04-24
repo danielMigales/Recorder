@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_video">
+
+    <fragment
+        android:id="@+id/navigation_video"
+        android:name="com.example.recorder.ui.video.VideoFragment"
+        android:label="Video"
+        tools:layout="@layout/fragment_video" />
+
+    <fragment
+        android:id="@+id/navigation_audio"
+        android:name="com.example.recorder.ui.audio.AudioFragment"
+        android:label="Audio"
+        tools:layout="@layout/fragment_audio" />
+
+</navigation>
