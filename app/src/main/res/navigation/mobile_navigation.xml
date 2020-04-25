@@ -17,4 +17,11 @@
         android:label="Audio"
         tools:layout="@layout/fragment_audio" />
 
+    <fragment
+        android:id="@+id/navigation_library"
+        android:name="com.example.recorder.ui.playlist.LibraryFragment"
+        android:label="Libreria"
+        tools:layout="@layout/fragment_library" />
+
+
 </navigation>

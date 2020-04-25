@@ -2,13 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/navigation_audio"
+        android:icon="@android:drawable/presence_audio_busy"
+        android:title="@string/audio" />
+    <item
         android:id="@+id/navigation_video"
         android:icon="@android:drawable/presence_video_busy"
         android:title="@string/video" />
 
     <item
-        android:id="@+id/navigation_audio"
-        android:icon="@android:drawable/presence_audio_busy"
-        android:title="@string/audio" />
+        android:id="@+id/navigation_library"
+        android:icon="@drawable/twotone_view_list_black_18dp"
+        android:title="@string/libreria" />
 
 </menu>

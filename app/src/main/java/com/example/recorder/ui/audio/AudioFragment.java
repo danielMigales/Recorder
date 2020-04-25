@@ -2,7 +2,6 @@ package com.example.recorder.ui.audio;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,6 +27,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+//este fragment es el que tendra la grabadora de audio
+
 public class AudioFragment extends Fragment {
 
     private AudioViewModel audioViewModel;
@@ -37,13 +38,12 @@ public class AudioFragment extends Fragment {
 
     //objetos de las clases MediaRecorder y MediaPlayer para la grabacion y reproduccion
     private MediaRecorder grabadora;
-    private MediaPlayer reproductor;
 
     //variable que identifica el fichero donde se guardara la grabacion y su extension. Se guardara en la carpeta RecordedAudio que se crea en el onCreate
     String fichero = Environment.getExternalStorageDirectory().getAbsolutePath() + "/RecordedAudio/" + fecha() + ".3gp";
 
     //variables de los botones del layout
-    private Button botonGrabar, botonReproducir, botonPararGrabacion, botonPararReproduccion;
+    private Button botonGrabar, botonPararGrabacion;
     private Chronometer simpleChronometer;
 
     // esto sirve para pedir permiso para grabar audio y grabarlo en la memoria
@@ -81,24 +81,11 @@ public class AudioFragment extends Fragment {
         File nuevaCarpeta = new File(Environment.getExternalStorageDirectory() + "/RecordedAudio");
         nuevaCarpeta.mkdir();
 
-
-        //inicializacion de botones. El de reproducir y parar se desactivan hasta que no se necesiten sus funciones
-        botonReproducir = view.findViewById(R.id.botonReproducir);
-        botonReproducir.setEnabled(true);
+        //inicializacion de botones.
         botonGrabar = view.findViewById(R.id.botonGrabar);
         botonPararGrabacion = view.findViewById(R.id.botonPararGrabacion);
         botonPararGrabacion.setEnabled(false);
-        botonPararReproduccion = view.findViewById(R.id.botonPararReproduccion);
-        botonPararReproduccion.setEnabled(false);
         simpleChronometer = view.findViewById(R.id.simpleChronometer);
-
-        botonReproducir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                iniciarReproductor();
-                Toast.makeText(getContext(), "Reproduciendo Audio", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         botonGrabar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,15 +108,6 @@ public class AudioFragment extends Fragment {
             }
         });
 
-        botonPararReproduccion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pararReproductor();
-                Toast.makeText(getContext(), "Audio parado", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
         return view;
     }
 
@@ -141,10 +119,8 @@ public class AudioFragment extends Fragment {
         grabadora.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP); //el formato de grabacion sera 3gp
         grabadora.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB); //el audio se codificara usando este formato
         grabadora.setOutputFile(fichero); //se le añade el fichero de salida
-
         botonGrabar.setEnabled(false);
         botonPararGrabacion.setEnabled(true);
-        botonReproducir.setEnabled(false);
 
         try {
             grabadora.prepare();
@@ -159,44 +135,8 @@ public class AudioFragment extends Fragment {
 
         grabadora.stop(); //parar
         grabadora.release(); //liberar todos los procesos
-
         botonGrabar.setEnabled(true);
         botonPararGrabacion.setEnabled(false);
-        botonReproducir.setEnabled(true);
-    }
-
-    //reproducir el audio grabado
-    public void iniciarReproductor() {
-
-        reproductor = new MediaPlayer(); //instancia de la clase reproductor
-
-        try {
-            reproductor.setDataSource(fichero); //asignamos la ruta del fichero a leer
-            reproductor.prepare();
-            reproductor.start();
-
-            botonGrabar.setEnabled(false);
-            botonPararGrabacion.setEnabled(false);
-            botonReproducir.setEnabled(false);
-            botonPararReproduccion.setEnabled(true);
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            Log.e(LOG_TAG, "Fallo en la reproduccion");
-        }
-    }
-
-    //parar la reproduccion de audio
-    private void pararReproductor() {
-
-        reproductor.stop();
-        reproductor.release();
-        reproductor = null;
-
-        botonGrabar.setEnabled(true);
-        botonPararGrabacion.setEnabled(false);
-        botonReproducir.setEnabled(true);
-        botonPararReproduccion.setEnabled(false);
     }
 
     //obtiene la fecha y hora para nombrar al archivo de audio
