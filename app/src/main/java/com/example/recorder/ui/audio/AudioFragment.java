@@ -1,17 +1,18 @@
 package com.example.recorder.ui.audio;
 
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +22,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.recorder.R;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AudioFragment extends Fragment {
 
@@ -34,18 +39,16 @@ public class AudioFragment extends Fragment {
     private MediaRecorder grabadora;
     private MediaPlayer reproductor;
 
-    //variable que identifica el fichero donde se guardara la grabacion y su extension
-    private String fichero = Environment.getExternalStorageDirectory().getAbsolutePath() + "/audio.3gp";
+    //variable que identifica el fichero donde se guardara la grabacion y su extension. Se guardara en la carpeta RecordedAudio que se crea en el onCreate
+    String fichero = Environment.getExternalStorageDirectory().getAbsolutePath() + "/RecordedAudio/" + fecha() + ".3gp";
 
     //variables de los botones del layout
     private Button botonGrabar, botonReproducir, botonPararGrabacion, botonPararReproduccion;
+    private Chronometer simpleChronometer;
 
     // esto sirve para pedir permiso para grabar audio y grabarlo en la memoria
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static final int REQUEST_WRITE_STORAGE_PERMISSION = 200;
-
-    public static final int RECORD_AUDIO = 0;
-
     private boolean permissionToRecordAccepted = false;
     private boolean permissionToWriteAccepted = false;
     private final String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
@@ -66,7 +69,6 @@ public class AudioFragment extends Fragment {
         Toast.makeText(getContext(), "No tienes permiso para guardar", Toast.LENGTH_SHORT).show();
     }
 
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         audioViewModel = ViewModelProviders.of(this).get(AudioViewModel.class);
         View view = inflater.inflate(R.layout.fragment_audio, container, false);
@@ -74,6 +76,10 @@ public class AudioFragment extends Fragment {
         //pedir aceptar permisos al usuario
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_WRITE_STORAGE_PERMISSION);
+
+        //creacion de la carpeta RecordedAudio en la raiz de la memoria interna. Se sobreescribe cada vex, pero no borra los datos que haya en el interior, con lo cual no hare un if file exist
+        File nuevaCarpeta = new File(Environment.getExternalStorageDirectory() + "/RecordedAudio");
+        nuevaCarpeta.mkdir();
 
 
         //inicializacion de botones. El de reproducir y parar se desactivan hasta que no se necesiten sus funciones
@@ -84,6 +90,7 @@ public class AudioFragment extends Fragment {
         botonPararGrabacion.setEnabled(false);
         botonPararReproduccion = view.findViewById(R.id.botonPararReproduccion);
         botonPararReproduccion.setEnabled(false);
+        simpleChronometer = view.findViewById(R.id.simpleChronometer);
 
         botonReproducir.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +104,7 @@ public class AudioFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 iniciarGrabadora();
+                simpleChronometer.start();
                 Toast.makeText(getContext(), "Grabacion Iniciada", Toast.LENGTH_SHORT).show();
             }
 
@@ -106,6 +114,9 @@ public class AudioFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 pararGrabadora();
+                fecha();
+                simpleChronometer.stop();
+                simpleChronometer.setBase(SystemClock.elapsedRealtime());
                 Toast.makeText(getContext(), "Grabacion Finalizada", Toast.LENGTH_SHORT).show();
             }
         });
@@ -175,6 +186,7 @@ public class AudioFragment extends Fragment {
         }
     }
 
+    //parar la reproduccion de audio
     private void pararReproductor() {
 
         reproductor.stop();
@@ -185,6 +197,16 @@ public class AudioFragment extends Fragment {
         botonPararGrabacion.setEnabled(false);
         botonReproducir.setEnabled(true);
         botonPararReproduccion.setEnabled(false);
-
     }
+
+    //obtiene la fecha y hora para nombrar al archivo de audio
+    private String fecha() {
+
+        Date date = new Date();
+        DateFormat hourdateFormat = new SimpleDateFormat("HH-mm_dd-MM-yyyy");
+        String fecha = hourdateFormat.format(date);
+        System.out.println(fecha);
+        return fecha;
+    }
+
 }
