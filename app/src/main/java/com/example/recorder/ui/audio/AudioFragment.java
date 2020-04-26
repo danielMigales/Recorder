@@ -37,7 +37,7 @@ public class AudioFragment extends Fragment {
     private static final String LOG_TAG = "Grabadora_Audio";
 
     //objetos de las clases MediaRecorder y MediaPlayer para la grabacion y reproduccion
-    private MediaRecorder grabadora;
+    private MediaRecorder grabadoraAudio;
 
     //variable que identifica el fichero donde se guardara la grabacion y su extension. Se guardara en la carpeta RecordedAudio que se crea en el onCreate
     String fichero = Environment.getExternalStorageDirectory().getAbsolutePath() + "/RecordedAudio/" + fecha() + ".3gp";
@@ -114,27 +114,27 @@ public class AudioFragment extends Fragment {
     //procedimiento de grabacion de audio
     public void iniciarGrabadora() {
 
-        grabadora = new MediaRecorder();  //se instancia la clase
-        grabadora.setAudioSource(MediaRecorder.AudioSource.MIC); //la fuente de audio vendra del microfono del dispositivo
-        grabadora.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP); //el formato de grabacion sera 3gp
-        grabadora.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB); //el audio se codificara usando este formato
-        grabadora.setOutputFile(fichero); //se le añade el fichero de salida
+        grabadoraAudio = new MediaRecorder();  //se instancia la clase
+        grabadoraAudio.setAudioSource(MediaRecorder.AudioSource.MIC); //la fuente de audio vendra del microfono del dispositivo
+        grabadoraAudio.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP); //el formato de grabacion sera 3gp
+        grabadoraAudio.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB); //el audio se codificara usando este formato
+        grabadoraAudio.setOutputFile(fichero); //se le añade el fichero de salida
         botonGrabar.setEnabled(false);
         botonPararGrabacion.setEnabled(true);
 
         try {
-            grabadora.prepare();
+            grabadoraAudio.prepare();
         } catch (IOException ex) { //excepcion al no encontrar archivo
             Log.e(LOG_TAG, "Fallo en la Grabacion");
         }
-        grabadora.start();
+        grabadoraAudio.start();
     }
 
     //procedimiento para parar la grabacion
     public void pararGrabadora() {
 
-        grabadora.stop(); //parar
-        grabadora.release(); //liberar todos los procesos
+        grabadoraAudio.stop(); //parar
+        grabadoraAudio.release(); //liberar todos los procesos
         botonGrabar.setEnabled(true);
         botonPararGrabacion.setEnabled(false);
     }

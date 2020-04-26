@@ -1,4 +1,4 @@
-package com.example.recorder;
+package com.example.recorder.controlador;
 
 import android.os.Bundle;
 
@@ -8,6 +8,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.recorder.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 //esta clase solo crea la barra de navegacion inferior

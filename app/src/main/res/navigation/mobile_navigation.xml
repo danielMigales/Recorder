@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_video">
+    app:startDestination="@id/navigation_audio">
 
     <fragment
         android:id="@+id/navigation_video"
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/navigation_library"
         android:name="com.example.recorder.ui.playlist.LibraryFragment"
-        android:label="Libreria"
+        android:label="Grabaciones"
         tools:layout="@layout/fragment_library" />
 
 

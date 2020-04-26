@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.recorder.R;
 import com.example.recorder.controlador.Audio;
 import com.example.recorder.controlador.AudioAdapter;
-import com.example.recorder.ui.audio.PlayerActivity;
+import com.example.recorder.modelo.PlayerActivity;
 
 import java.io.File;
 import java.util.ArrayList;
