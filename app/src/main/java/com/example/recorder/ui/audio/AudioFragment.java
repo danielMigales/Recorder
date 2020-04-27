@@ -21,7 +21,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.recorder.R;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +43,7 @@ public class AudioFragment extends Fragment {
 
     //variables de los botones del layout
     private Button botonGrabar, botonPararGrabacion;
-    private Chronometer simpleChronometer;
+    private Chronometer temporizador;
 
     // esto sirve para pedir permiso para grabar audio y grabarlo en la memoria
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -77,21 +76,22 @@ public class AudioFragment extends Fragment {
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_WRITE_STORAGE_PERMISSION);
 
-        //creacion de la carpeta RecordedAudio en la raiz de la memoria interna. Se sobreescribe cada vex, pero no borra los datos que haya en el interior, con lo cual no hare un if file exist
-        File nuevaCarpeta = new File(Environment.getExternalStorageDirectory() + "/RecordedAudio");
-        nuevaCarpeta.mkdir();
+        //ESTO LO HE TRASLADADO AL MAIN
+        // creacion de la carpeta RecordedAudio en la raiz de la memoria interna. Se sobreescribe cada vex, pero no borra los datos que haya en el interior, con lo cual no hare un if file exist
+        //File nuevaCarpeta = new File(Environment.getExternalStorageDirectory() + "/RecordedAudio");
+        //nuevaCarpeta.mkdir();
 
         //inicializacion de botones.
-        botonGrabar = view.findViewById(R.id.botonGrabar);
-        botonPararGrabacion = view.findViewById(R.id.botonPararGrabacion);
+        botonGrabar = view.findViewById(R.id.botonGrabarAudio);
+        botonPararGrabacion = view.findViewById(R.id.botonPararGrabacionAudio);
         botonPararGrabacion.setEnabled(false);
-        simpleChronometer = view.findViewById(R.id.simpleChronometer);
+        temporizador = view.findViewById(R.id.cronometroAudio);
 
         botonGrabar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 iniciarGrabadora();
-                simpleChronometer.start();
+                temporizador.start();
                 Toast.makeText(getContext(), "Grabacion Iniciada", Toast.LENGTH_SHORT).show();
             }
 
@@ -102,8 +102,8 @@ public class AudioFragment extends Fragment {
             public void onClick(View view) {
                 pararGrabadora();
                 fecha();
-                simpleChronometer.stop();
-                simpleChronometer.setBase(SystemClock.elapsedRealtime());
+                temporizador.stop();
+                temporizador.setBase(SystemClock.elapsedRealtime());
                 Toast.makeText(getContext(), "Grabacion Finalizada", Toast.LENGTH_SHORT).show();
             }
         });
@@ -140,12 +140,11 @@ public class AudioFragment extends Fragment {
     }
 
     //obtiene la fecha y hora para nombrar al archivo de audio
-    private String fecha() {
+    public String fecha() {
 
         Date date = new Date();
-        DateFormat hourdateFormat = new SimpleDateFormat("HH-mm_dd-MM-yyyy");
+        DateFormat hourdateFormat = new SimpleDateFormat("HH-mm-ss_dd-MM-yyyy");
         String fecha = hourdateFormat.format(date);
-        System.out.println(fecha);
         return fecha;
     }
 

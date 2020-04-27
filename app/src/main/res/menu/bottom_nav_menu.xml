@@ -13,6 +13,6 @@
     <item
         android:id="@+id/navigation_library"
         android:icon="@drawable/twotone_view_list_black_18dp"
-        android:title="@string/libreria" />
+        android:title="Grabaciones" />
 
 </menu>

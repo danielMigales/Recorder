@@ -8,7 +8,7 @@
 
 
     <Chronometer
-        android:id="@+id/simpleChronometer"
+        android:id="@+id/cronometroAudio"
         android:layout_width="200dp"
         android:layout_height="75dp"
         android:layout_marginStart="105dp"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/botonPararGrabacion"
+        android:id="@+id/botonPararGrabacionAudio"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="219dp"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/botonGrabar"
+        android:id="@+id/botonGrabarAudio"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="105dp"

@@ -7,4 +7,9 @@
     <string name="grabar">Grabar</string>
     <string name="libreria">Libreria</string>
     <string name="_00_00">00:00</string>
+    <string name="titulo_del_audio">Titulo del audio</string>
+
+    <string name="title_activity_fullscreen_video">FullscreenVideoActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

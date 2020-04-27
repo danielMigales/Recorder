@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.recorder.R;
-import com.example.recorder.controlador.Audio;
-import com.example.recorder.controlador.AudioAdapter;
+import com.example.recorder.controlador.AdaptadorArchivo;
+import com.example.recorder.controlador.Archivo;
 import com.example.recorder.modelo.PlayerActivity;
 
 import java.io.File;
@@ -31,38 +31,38 @@ public class LibraryFragment extends Fragment {
     private LibraryViewModel libraryViewModel;
 
     //se declara un arraylist y un listview
-    private ArrayList<Audio> listadoAudios;
-    private ListView listviewAudios;
+    private ArrayList<Archivo> listadoArchivos;
+    private ListView listViewArchivos;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         libraryViewModel = ViewModelProviders.of(this).get(LibraryViewModel.class);
         View view = inflater.inflate(R.layout.fragment_library, container, false);
 
-        listviewAudios = view.findViewById(R.id.audioList);
-        listadoAudios = new ArrayList<Audio>();
+        listViewArchivos = view.findViewById(R.id.listadoArchivos);
+        listadoArchivos = new ArrayList<Archivo>();
 
         //llamada al metodo que obtiene los datos para rellenar el listview
-        getAudioList();
+        getListaArchivos();
         //esto lo ordena alfabeticamente
-        Collections.sort(listadoAudios, new Comparator<Audio>() {
-            public int compare(Audio a, Audio b) {
+        Collections.sort(listadoArchivos, new Comparator<Archivo>() {
+            public int compare(Archivo a, Archivo b) {
                 return a.getTitulo().compareTo(b.getTitulo());
             }
         });
 
         //pasamos el listado al adaptador de la listview
-        final AudioAdapter audios = new AudioAdapter(getActivity(), listadoAudios);
-        listviewAudios.setAdapter(audios);
+        final AdaptadorArchivo archivos = new AdaptadorArchivo(getActivity(), listadoArchivos);
+        listViewArchivos.setAdapter(archivos);
 
         //al clicar un item de la lista te envio a la activity que tiene los controles del mediaplayer
-        listviewAudios.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewArchivos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
-                
+
                 Intent intent = new Intent(getContext(), PlayerActivity.class);
                 //obtengo y envio a la otra activity el nombre del archivo escogido 
-                String nombre = listadoAudios.get(position).getTitulo();
+                String nombre = listadoArchivos.get(position).getTitulo();
                 intent.putExtra("titulo", nombre);
                 startActivity(intent);
             }
@@ -72,14 +72,23 @@ public class LibraryFragment extends Fragment {
     }
 
     //este metodo lee los archivos que hay en el directorio y guarda los nombres en el arraylist
-    public void getAudioList() {
+    public void getListaArchivos() {
 
-        File archivo = new File(Environment.getExternalStorageDirectory() + "/RecordedAudio/");
-        File[] files = archivo.listFiles();
+        File rutaAudio = new File(Environment.getExternalStorageDirectory() + "/RecordedAudio/");
+        File[] archivosAudio = rutaAudio.listFiles();
 
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-            listadoAudios.add(new Audio(file.getName()));
+        for (int i = 0; i < archivosAudio.length; i++) {
+            File file = archivosAudio[i];
+            listadoArchivos.add(new Archivo(file.getName()));
+        }
+
+        File rutaVideos = new File(Environment.getExternalStorageDirectory() + "/RecordedVideo/");
+        File[] archivosVideo = rutaVideos.listFiles();
+
+        for (int i = 0; i < archivosVideo.length; i++) {
+            File file = archivosVideo[i];
+            listadoArchivos.add(new Archivo(file.getName()));
         }
     }
+
 }

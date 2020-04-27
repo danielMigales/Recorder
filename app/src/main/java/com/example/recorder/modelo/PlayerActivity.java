@@ -32,8 +32,8 @@ public class PlayerActivity extends AppCompatActivity {
     //botones, barra de seguimiento y textos
     private Button botonReproducir, botonRebobinar, botonAvanzar, botonPararReproduccion;
     private SeekBar seekBar;
-    private TextView seekProgress;
-    private TextView seekDuration;
+    private TextView seekProgress, seekDuration, textViewTitulo;
+
 
     //manejador de la barra de seguimiento
     Handler seekHandler = new Handler();
@@ -49,6 +49,7 @@ public class PlayerActivity extends AppCompatActivity {
         seekBar = (SeekBar) findViewById(R.id.seekBarPlayer);
         seekProgress = (TextView) findViewById(R.id.textViewProgress);
         seekDuration = (TextView) findViewById(R.id.textViewDuration);
+        textViewTitulo = (TextView) findViewById(R.id.textViewTitulo);
 
         //instancia de la clase reproductor al mostrar la actividad
         reproductor = new MediaPlayer();
@@ -116,6 +117,10 @@ public class PlayerActivity extends AppCompatActivity {
             seekBar.setMax(reproductor.getDuration());
             //se obtiene el progreso para actualizar los textview con el tiempo
             getProgress();
+            //vuelvo a recuperar el titulo de esta manera ya que no le asigne ninguna variable, y se lo añado al textview
+            Intent intent = getIntent();
+            String titulo = intent.getStringExtra("titulo");
+            textViewTitulo.setText(titulo);
             //cambiar el icono a pause
             botonReproducir.setBackground(getDrawable(R.drawable.twotone_pause_circle_filled_black_18dp));
             Toast.makeText(getApplication(), "Reproduciendo Audio", Toast.LENGTH_SHORT).show();
@@ -129,7 +134,7 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     //parar la reproduccion de audio
-    private void pararReproductor() {
+    public void pararReproductor() {
 
         reproductor.stop();
         finish();

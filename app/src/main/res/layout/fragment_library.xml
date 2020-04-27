@@ -6,8 +6,10 @@
     tools:context=".ui.playlist.LibraryFragment">
 
     <ListView
-        android:id="@+id/audioList"
+        android:id="@+id/listadoArchivos"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"></ListView>
 
 </FrameLayout>
