@@ -1,4 +1,4 @@
-package com.example.recorder.ui.audio;
+package com.example.recorder.vista.audio;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

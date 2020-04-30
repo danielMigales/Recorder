@@ -1,4 +1,4 @@
-package com.example.recorder.ui.playlist;
+package com.example.recorder.vista.playlist;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import com.example.recorder.R;
 import com.example.recorder.controlador.AdaptadorArchivo;
 import com.example.recorder.controlador.Archivo;
 import com.example.recorder.modelo.PlayerActivity;
+import com.example.recorder.modelo.VideoActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -60,11 +61,25 @@ public class LibraryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
 
-                Intent intent = new Intent(getContext(), PlayerActivity.class);
-                //obtengo y envio a la otra activity el nombre del archivo escogido 
+                //obtengo el nombre del archivo seleccionado
                 String nombre = listadoArchivos.get(position).getTitulo();
-                intent.putExtra("titulo", nombre);
-                startActivity(intent);
+
+                //extraigo del nombre la parte de la extension (3gp o mp4)
+                int inicio = nombre.indexOf(".");
+                int fin = nombre.indexOf("", inicio);
+                String extension = (nombre.substring(inicio + 1));
+
+                if (extension.equals("3gp")) {
+                    Intent intent = new Intent(getContext(), PlayerActivity.class);
+                    intent.putExtra("titulo", nombre);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getContext(), VideoActivity.class);
+                    intent.putExtra("titulo", nombre);
+                    startActivity(intent);
+                }
+
+
             }
         });
 

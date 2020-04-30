@@ -1,4 +1,4 @@
-package com.example.recorder.ui.video;
+package com.example.recorder.vista.video;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -33,10 +33,11 @@ public class VideoFragment extends Fragment {
     private VideoViewModel videoViewModel;
 
     //instancia de la clase grabadorra
-    MediaRecorder grabadoraVideo = new MediaRecorder();
+    MediaRecorder grabadoraVideo;
 
     //camara y superficie de la vista previa de video
     private Camera camara;
+
     private SurfaceView surface;
     private SurfaceHolder holder;
 
@@ -125,17 +126,25 @@ public class VideoFragment extends Fragment {
         botonGrabarVideo.setEnabled(false);
         botonPararGrabacion.setEnabled(true);
 
+        //DESHABILITADO PORQUE NO ME PERMITE DESBLOQUEAR LA CAMARA
+        //camara = getCameraInstance();
+        //camara.unlock();
+
+        grabadoraVideo = new MediaRecorder();
+
         //ruta para guardar el video
         grabadoraVideo.setOutputFile(fichero);
-        //fuente y formatos de video
+
+        //fuentes y formatos
+        grabadoraVideo.setAudioSource(MediaRecorder.AudioSource.MIC);
         grabadoraVideo.setVideoSource(MediaRecorder.VideoSource.CAMERA);
         grabadoraVideo.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         grabadoraVideo.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
-        //grabadoraVideo.setVideoEncodingBitRate(512 * 1000);
+        grabadoraVideo.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+        grabadoraVideo.setVideoEncodingBitRate(512 * 1000);
 
-        //formatos de audio
-        //grabadoraVideo.setAudioSource(MediaRecorder.AudioSource.MIC);
-        //grabadoraVideo.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        //Esta opcion recupera la configuración de perfil de videocámara predefinida. Se desactiva porque estoy configurandolo manualmente (formatos de video)
+        //grabadoraVideo.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
 
         //duracion del video
         grabadoraVideo.setMaxDuration(10000);
@@ -164,6 +173,7 @@ public class VideoFragment extends Fragment {
 
         grabadoraVideo.stop();
         grabadoraVideo.reset();
+
         Toast.makeText(getContext(), "Video guardado", Toast.LENGTH_SHORT).show();
 
     }

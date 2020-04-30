@@ -1,4 +1,4 @@
-package com.example.recorder.ui.audio;
+package com.example.recorder.vista.audio;
 
 import android.Manifest;
 import android.content.pm.PackageManager;

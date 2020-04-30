@@ -28,7 +28,7 @@
         android:layout_marginTop="600dp"
         android:layout_marginEnd="302dp"
         android:layout_marginBottom="81dp"
-        android:background="@drawable/twotone_keyboard_backspace_black_18dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

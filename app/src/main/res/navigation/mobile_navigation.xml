@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_video"
-        android:name="com.example.recorder.ui.video.VideoFragment"
+        android:name="com.example.recorder.vista.video.VideoFragment"
         android:label="Video"
         tools:layout="@layout/fragment_video" />
 
     <fragment
         android:id="@+id/navigation_audio"
-        android:name="com.example.recorder.ui.audio.AudioFragment"
+        android:name="com.example.recorder.vista.audio.AudioFragment"
         android:label="Audio"
         tools:layout="@layout/fragment_audio" />
 
     <fragment
         android:id="@+id/navigation_library"
-        android:name="com.example.recorder.ui.playlist.LibraryFragment"
+        android:name="com.example.recorder.vista.playlist.LibraryFragment"
         android:label="Grabaciones"
         tools:layout="@layout/fragment_library" />
 

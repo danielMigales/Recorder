@@ -1,4 +1,4 @@
-package com.example.recorder.ui.video;
+package com.example.recorder.vista.video;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

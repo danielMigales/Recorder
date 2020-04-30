@@ -1,4 +1,4 @@
-package com.example.recorder.ui.playlist;
+package com.example.recorder.vista.playlist;
 
 import androidx.lifecycle.ViewModel;
 
