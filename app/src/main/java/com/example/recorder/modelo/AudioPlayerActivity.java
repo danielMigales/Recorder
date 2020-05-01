@@ -21,7 +21,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 //esta clase es el reproductor multimedia para los audios de la lista
 
-public class PlayerActivity extends AppCompatActivity {
+public class AudioPlayerActivity extends AppCompatActivity {
 
     //variable para asignar un nombre al log
     private static final String LOG_TAG = "Reproductor Audio";
@@ -44,6 +44,7 @@ public class PlayerActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+        getSupportActionBar().hide();
 
         //controles en el layout
         seekBar = (SeekBar) findViewById(R.id.seekBarPlayer);
@@ -149,7 +150,7 @@ public class PlayerActivity extends AppCompatActivity {
         int currentPosition = reproductor.getCurrentPosition();
         int duration = reproductor.getDuration();
         int recoil = 10000;
-        Toast.makeText(PlayerActivity.this, "-10 seconds", LENGTH_SHORT).show();
+        Toast.makeText(AudioPlayerActivity.this, "-10 seconds", LENGTH_SHORT).show();
 
         if (currentPosition - recoil > 0) {
             reproductor.seekTo(currentPosition - recoil);
@@ -162,7 +163,7 @@ public class PlayerActivity extends AppCompatActivity {
         int currentPosition = reproductor.getCurrentPosition();
         int duration = reproductor.getDuration();
         int advance = 10000;
-        Toast.makeText(PlayerActivity.this, "+10 seconds", LENGTH_SHORT).show();
+        Toast.makeText(AudioPlayerActivity.this, "+10 seconds", LENGTH_SHORT).show();
 
         if (currentPosition + advance < duration) {
             reproductor.seekTo(currentPosition + advance);

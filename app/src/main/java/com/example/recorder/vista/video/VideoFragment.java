@@ -2,12 +2,15 @@ package com.example.recorder.vista.video;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Camera;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -36,10 +39,19 @@ public class VideoFragment extends Fragment {
     MediaRecorder grabadoraVideo;
 
     //camara y superficie de la vista previa de video
-    private Camera camara;
-
+    private CameraManager camara;
+    private CameraDevice cameraDevice;
     private SurfaceView surface;
     private SurfaceHolder holder;
+
+    private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+
+    static {
+        ORIENTATIONS.append(Surface.ROTATION_0, 90);
+        ORIENTATIONS.append(Surface.ROTATION_90, 0);
+        ORIENTATIONS.append(Surface.ROTATION_180, 270);
+        ORIENTATIONS.append(Surface.ROTATION_270, 180);
+    }
 
     //botones de control
     private Button botonGrabarVideo, botonPararGrabacion;
@@ -51,9 +63,11 @@ public class VideoFragment extends Fragment {
     // esto sirve para pedir permiso para grabar audio y grabarlo en la memoria
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static final int REQUEST_WRITE_STORAGE_PERMISSION = 200;
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
     private boolean permissionToRecordAccepted = false;
     private boolean permissionToWriteAccepted = false;
     private final String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -152,6 +166,8 @@ public class VideoFragment extends Fragment {
         // Asociando la previsualización a la superficie
         holder = surface.getHolder();
         holder.setFixedSize(409, 657);
+        holder.setSizeFromLayout();
+
         grabadoraVideo.setPreviewDisplay(holder.getSurface());
 
         try {
@@ -186,4 +202,24 @@ public class VideoFragment extends Fragment {
         String fecha = hourdateFormat.format(date);
         return fecha;
     }
+
+    //estos son los metodos listeners de la surface
+
+    public void surfaceCreated(SurfaceHolder holder) {
+
+        surface.setRotation(0);
+    }
+
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
+        grabadoraVideo.release();
+        holder.getSurface().release();
+        this.holder = null;
+    }
+
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+
 }

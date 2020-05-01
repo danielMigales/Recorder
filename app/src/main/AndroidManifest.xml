@@ -18,8 +18,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".modelo.VideoActivity"></activity>
-        <activity android:name=".modelo.PlayerActivity" />
+        <activity
+            android:name=".modelo.VideoPlayerActivity"
+            android:screenOrientation="fullSensor" />
+
+        <activity android:name=".modelo.AudioPlayerActivity" />
         <activity
             android:name=".controlador.MainActivity"
             android:label="@string/app_name">

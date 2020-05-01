@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.recorder.R;
 import com.example.recorder.controlador.AdaptadorArchivo;
 import com.example.recorder.controlador.Archivo;
-import com.example.recorder.modelo.PlayerActivity;
-import com.example.recorder.modelo.VideoActivity;
+import com.example.recorder.modelo.AudioPlayerActivity;
+import com.example.recorder.modelo.VideoPlayerActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -70,11 +70,11 @@ public class LibraryFragment extends Fragment {
                 String extension = (nombre.substring(inicio + 1));
 
                 if (extension.equals("3gp")) {
-                    Intent intent = new Intent(getContext(), PlayerActivity.class);
+                    Intent intent = new Intent(getContext(), AudioPlayerActivity.class);
                     intent.putExtra("titulo", nombre);
                     startActivity(intent);
                 } else {
-                    Intent intent = new Intent(getContext(), VideoActivity.class);
+                    Intent intent = new Intent(getContext(), VideoPlayerActivity.class);
                     intent.putExtra("titulo", nombre);
                     startActivity(intent);
                 }
