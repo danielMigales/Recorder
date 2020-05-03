@@ -36,6 +36,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         String titulo = intent.getStringExtra("titulo");
         String fichero = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Recordedvideo/" + titulo;
 
+        //coloca el archivo en la videoview
         videoView.setVideoPath(fichero);
 
         // BARRA CON BOTONES QUE APARECE AL TOCAR EL VIDEO

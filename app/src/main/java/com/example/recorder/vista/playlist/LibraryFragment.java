@@ -40,6 +40,14 @@ public class LibraryFragment extends Fragment {
         libraryViewModel = ViewModelProviders.of(this).get(LibraryViewModel.class);
         View view = inflater.inflate(R.layout.fragment_library, container, false);
 
+        //DESDE EL MAIN SE CREAN LAS DOS CARPETAS. AUNQUE POR SI ACASO LO REPITO EN CADA FRAGMENT
+        //creacion de la carpeta RecordedAudio en la raiz de la memoria interna. Se sobreescribe cada vex, pero no borra los datos que haya en el interior, con lo cual no hare un if file exist
+        File nuevaCarpetaAudio = new File(Environment.getExternalStorageDirectory() + "/RecordedAudio");
+        nuevaCarpetaAudio.mkdir();
+        //creacion de la carpeta RecordedAudio en la raiz de la memoria interna. Se sobreescribe cada vex, pero no borra los datos que haya en el interior, con lo cual no hare un if file exist
+        File nuevaCarpetaVideo = new File(Environment.getExternalStorageDirectory() + "/RecordedVideo");
+        nuevaCarpetaVideo.mkdir();
+
         listViewArchivos = view.findViewById(R.id.listadoArchivos);
         listadoArchivos = new ArrayList<Archivo>();
 

@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.recorder.R;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -76,27 +77,29 @@ public class AudioFragment extends Fragment {
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_WRITE_STORAGE_PERMISSION);
 
-        //ESTO LO HE TRASLADADO AL MAIN
-        // creacion de la carpeta RecordedAudio en la raiz de la memoria interna. Se sobreescribe cada vex, pero no borra los datos que haya en el interior, con lo cual no hare un if file exist
-        //File nuevaCarpeta = new File(Environment.getExternalStorageDirectory() + "/RecordedAudio");
-        //nuevaCarpeta.mkdir();
+        //DESDE EL MAIN SE CREAN LAS DOS CARPETAS. AUNQUE POR SI ACASO LO REPITO EN CADA FRAGMENT
+        //creacion de la carpeta RecordedAudio en la raiz de la memoria interna. Se sobreescribe cada vex, pero no borra los datos que haya en el interior, con lo cual no hare un if file exist
+        File nuevaCarpetaAudio = new File(Environment.getExternalStorageDirectory() + "/RecordedAudio");
+        nuevaCarpetaAudio.mkdir();
+        //creacion de la carpeta RecordedAudio en la raiz de la memoria interna. Se sobreescribe cada vex, pero no borra los datos que haya en el interior, con lo cual no hare un if file exist
+        File nuevaCarpetaVideo = new File(Environment.getExternalStorageDirectory() + "/RecordedVideo");
+        nuevaCarpetaVideo.mkdir();
+
+        temporizador = view.findViewById(R.id.cronometroAudio);
 
         //inicializacion de botones.
         botonGrabar = view.findViewById(R.id.botonGrabarAudio);
-        botonPararGrabacion = view.findViewById(R.id.botonPararGrabacionAudio);
-        botonPararGrabacion.setEnabled(false);
-        temporizador = view.findViewById(R.id.cronometroAudio);
-
         botonGrabar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                runCronometro();
                 iniciarGrabadora();
-                temporizador.start();
                 Toast.makeText(getContext(), "Grabacion Iniciada", Toast.LENGTH_SHORT).show();
             }
-
         });
 
+        botonPararGrabacion = view.findViewById(R.id.botonPararGrabacionAudio);
+        botonPararGrabacion.setEnabled(false);
         botonPararGrabacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,13 +111,16 @@ public class AudioFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
     //procedimiento de grabacion de audio
     public void iniciarGrabadora() {
 
-        grabadoraAudio = new MediaRecorder();  //se instancia la clase
+        //se instancia la clase
+        grabadoraAudio = new MediaRecorder();
+        //se definene los parametros
         grabadoraAudio.setAudioSource(MediaRecorder.AudioSource.MIC); //la fuente de audio vendra del microfono del dispositivo
         grabadoraAudio.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP); //el formato de grabacion sera 3gp
         grabadoraAudio.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB); //el audio se codificara usando este formato
@@ -148,4 +154,18 @@ public class AudioFragment extends Fragment {
         return fecha;
     }
 
+    private void runCronometro() {
+
+        new Thread() {
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        temporizador.start(); //inicio del cronometro
+                    }
+                });
+            }
+        }.start();
+    }
 }
+

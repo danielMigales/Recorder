@@ -34,10 +34,8 @@ public class AudioPlayerActivity extends AppCompatActivity {
     private SeekBar seekBar;
     private TextView seekProgress, seekDuration, textViewTitulo;
 
-
     //manejador de la barra de seguimiento
     Handler seekHandler = new Handler();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -2,15 +2,15 @@ package com.example.recorder.vista.video;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
+import android.hardware.Camera;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -26,12 +26,15 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.recorder.R;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class VideoFragment extends Fragment {
+
+//ESTA CLASE DEBERIA EXTENDER DE SurfaceView PARA QUE FUNCIONASE CORRECTAMENTE, PERO NO PUEDE YA QUE EXTIENDE DE FRAGMENT
+public class VideoFragment extends Fragment implements SurfaceHolder.Callback {
 
     private VideoViewModel videoViewModel;
 
@@ -39,19 +42,10 @@ public class VideoFragment extends Fragment {
     MediaRecorder grabadoraVideo;
 
     //camara y superficie de la vista previa de video
-    private CameraManager camara;
+    private CameraManager cameraManager;
     private CameraDevice cameraDevice;
     private SurfaceView surface;
     private SurfaceHolder holder;
-
-    private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-
-    static {
-        ORIENTATIONS.append(Surface.ROTATION_0, 90);
-        ORIENTATIONS.append(Surface.ROTATION_90, 0);
-        ORIENTATIONS.append(Surface.ROTATION_180, 270);
-        ORIENTATIONS.append(Surface.ROTATION_270, 180);
-    }
 
     //botones de control
     private Button botonGrabarVideo, botonPararGrabacion;
@@ -69,16 +63,18 @@ public class VideoFragment extends Fragment {
     private final String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
 
 
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         videoViewModel = ViewModelProviders.of(this).get(VideoViewModel.class);
         View view = inflater.inflate(R.layout.fragment_video, container, false);
 
-        //ESTO LO HE TRASLADADO AL MAIN
+        //DESDE EL MAIN SE CREAN LAS DOS CARPETAS. AUNQUE POR SI ACASO LO REPITO EN CADA FRAGMENT
         //creacion de la carpeta RecordedAudio en la raiz de la memoria interna. Se sobreescribe cada vex, pero no borra los datos que haya en el interior, con lo cual no hare un if file exist
-        //File nuevaCarpeta = new File(Environment.getExternalStorageDirectory() + "/RecordedVideo");
-        //nuevaCarpeta.mkdir();
+        File nuevaCarpetaAudio = new File(Environment.getExternalStorageDirectory() + "/RecordedAudio");
+        nuevaCarpetaAudio.mkdir();
+        //creacion de la carpeta RecordedAudio en la raiz de la memoria interna. Se sobreescribe cada vex, pero no borra los datos que haya en el interior, con lo cual no hare un if file exist
+        File nuevaCarpetaVideo = new File(Environment.getExternalStorageDirectory() + "/RecordedVideo");
+        nuevaCarpetaVideo.mkdir();
 
         //inicializacion de la superfice para ver la preview del video mientras graba
         surface = view.findViewById(R.id.surfaceView);
@@ -95,8 +91,8 @@ public class VideoFragment extends Fragment {
         botonGrabarVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                prepararGrabadoraVideo(); //funcion que prepara todo el formato del video
                 temporizador.start(); //inicio del cronometro
+                prepararGrabadoraVideo(); //funcion que prepara todo el formato del video
                 Toast.makeText(getContext(), "Grabando video", Toast.LENGTH_SHORT).show();
             }
         });
@@ -140,10 +136,6 @@ public class VideoFragment extends Fragment {
         botonGrabarVideo.setEnabled(false);
         botonPararGrabacion.setEnabled(true);
 
-        //DESHABILITADO PORQUE NO ME PERMITE DESBLOQUEAR LA CAMARA
-        //camara = getCameraInstance();
-        //camara.unlock();
-
         grabadoraVideo = new MediaRecorder();
 
         //ruta para guardar el video
@@ -157,15 +149,13 @@ public class VideoFragment extends Fragment {
         grabadoraVideo.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
         grabadoraVideo.setVideoEncodingBitRate(512 * 1000);
 
-        //Esta opcion recupera la configuración de perfil de videocámara predefinida. Se desactiva porque estoy configurandolo manualmente (formatos de video)
-        //grabadoraVideo.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
-
         //duracion del video
         grabadoraVideo.setMaxDuration(10000);
 
         // Asociando la previsualización a la superficie
         holder = surface.getHolder();
-        holder.setFixedSize(409, 657);
+        holder.addCallback(this); //implements callback, sino no funciona
+        holder.setFixedSize(640, 480);
         holder.setSizeFromLayout();
 
         grabadoraVideo.setPreviewDisplay(holder.getSurface());
@@ -176,8 +166,6 @@ public class VideoFragment extends Fragment {
             e.printStackTrace();
         }
         grabadoraVideo.start();
-
-
     }
 
     //parada del video y reseteo
@@ -204,10 +192,8 @@ public class VideoFragment extends Fragment {
     }
 
     //estos son los metodos listeners de la surface
-
     public void surfaceCreated(SurfaceHolder holder) {
 
-        surface.setRotation(0);
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
@@ -219,7 +205,19 @@ public class VideoFragment extends Fragment {
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
+        if (holder.getSurface() == null) {
+            return;
+        }
+
+        Camera camera;
+        camera = Camera.open();
+        camera.setDisplayOrientation(90);//only 2.2>
+        Camera.Parameters p = camera.getParameters();
+        p.set("jpeg-quality", 100);
+        p.setRotation(90);
+        p.setPictureFormat(PixelFormat.JPEG);
+        p.setPreviewSize(height, width);
+        camera.setParameters(p);
+
     }
-
-
 }
